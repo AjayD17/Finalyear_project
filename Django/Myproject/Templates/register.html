@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'Bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'Jquery/jquery.min.js' %}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+
+        .register-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .register-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .register-btn:hover {
+            background-color: #0056b3;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background-color: #eaf1f9;
+            color: #31708f;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .text-center a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Create an Account</h2>
+
+        {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">  
+            {% csrf_token %}
+
+            <label for="username">Username:</label>
+            <input type="text" name="username" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" required><br>
+
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" name="phone_number"><br>
+
+            <label for="profile_picture">Profile Picture:</label>
+            <input type="file" name="profile_picture"><br> 
+
+            <label for="password1">Password:</label>
+            <input type="password" name="password1" required><br>
+
+            <label for="password2">Confirm Password:</label>
+            <input type="password" name="password2" required><br>
+
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+        </div>
+    </div>
+
+    <div class="footer-text">
+        <p>&copy; 2025 BDMVS</p>
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function(){
+        $(".alert").hide(4000);
+    });
+</script>

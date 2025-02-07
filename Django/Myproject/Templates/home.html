@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Website</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://wildbrine.com/wp-content/uploads/2017/08/ncbi-300x150.png" class="food-munch-logo" />
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-link active" id="navItem1" href="#wcuSection">
+                        Welcome to BDMVS
+                        <span class="sr-only">(current)</span>
+                    </a>
+                    <a class="nav-link" href="#exploreMenuSection" id="navItem2">Popular Resources</a>
+                    <a class="nav-link" href="#followUsSection" id="navItem4">Follow Us</a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="banner-section-bg-container d-flex justify-content-center flex-column">
+        <div class="text-center">
+            <img src="https://res.cloudinary.com/drzzqkakp/image/upload/v1712816148/yle8vv8ze5sfkk1gej72.png" class="nih-logo" />
+            <h1 class="banner-heading mb-3">BDMVS</h1>
+            <p class="banner-caption mb-4">BIOLOGICAL DEVELOPMENT MANAGEMENT VISUALIZATION SYSTEM</p>
+            <!-- Button trigger modal -->
+            <button type="button" class="custom-button" data-toggle="modal" data-target="#exampleModal">
+                Log in
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"> Login Page </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body p-5">
+                            <label class="Databases mb-4 ml-4"> Username </label>
+                            <input type="text" name="name" class="inputs mb-3 ml-2"> <br />
+                            <label class="Databases mb-4"> Email address </label>
+                            <input type="text" name="name" class="inputs">
+                            <label class="Databases ml-4"> Mobile No </label>
+                            <input type="text" name="name" class="inputs">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Log in</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </button>
+        </div>
+    </div>
+    <div class="mt-4 mb-3 text-center">
+        <label class="Databases"> All Databases </label>
+        <input type="text" name="name" class="inputs">
+        <button class="custom-button-2"> Search </button>
+    </div>
+    <div class="wcu-section pt-5 pb-5" id="wcuSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="wcu-section-heading">Welcome to BDMVS</h1>
+                    <p class="wcu-section-description mb-4">
+                        The Biological Development Management & Visualization System (BDMVS) is a comprehensive tool designed to manage and visualize biological data. It enables users to search, analyze, and retrieve protein-related information from a vast database. The system offers easy access to data, allowing users to explore key biological metrics and visualize complex protein structures. With a user-friendly interface, BDMVS aims to streamline biological research by providing efficient and interactive tools for data analysis and visualization.
+                    </p>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a href="https://submit.ncbi.nlm.nih.gov/" target="_blank">
+                        <div class="wcu-card p-3 mb-3">
+                            <i class="fa-sharp fa-solid fa-upload wcu-card-image" style="color: #a21010;"></i>
+                            <h1 class="wcu-card-title mt-3">Submit</h1>
+                            <p class="wcu-card-description">
+                                Deposit data or manuscripts into NCBI databases
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a href="https://www.ncbi.nlm.nih.gov/home/download/" target="_blank">
+                        <div class="wcu-card p-3 mb-3">
+                            <i class="fa-solid fa-download wcu-card-image" style="color: #a21010;"></i>
+                            <h1 class="wcu-card-title mt-3">Download</h1>
+                            <p class="wcu-card-description">
+                                Transfer BDMVS data to your computer
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a href="https://ncbi.nlm.nih.gov/home/learn/" target="_blank">
+                        <div class="wcu-card p-3 mb-3">
+                            <i class="fa-solid fa-book wcu-card-image" style="color: #a21010;"></i>
+                            <h1 class="wcu-card-title mt-3">Learn</h1>
+                            <p class="wcu-card-description">
+                                Find help documents, attend a class or watch a tutorial
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a href="https://www.ncbi.nlm.nih.gov/home/develop/" target="_blank">
+                        <div class="wcu-card p-3 mb-3">
+                            <i class="fa-solid fa-building wcu-card-image" style="color: #a21010;"></i>
+                            <h1 class="wcu-card-title mt-3">Develop</h1>
+                            <p class="wcu-card-description">
+                                Use NCBI APIs and code libraries to build applications
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a href="https://www.ncbi.nlm.nih.gov/home/analyze/" target="_blank">
+                        <div class="wcu-card p-3 mb-3">
+                            <i class="fa-solid fa-magnifying-glass-plus wcu-card-image" style="color: #a21010;"></i>
+                            <h1 class="wcu-card-title mt-3">Analyze</h1>
+                            <p class="wcu-card-description">
+                                Identify an BDMVS tool for your data analysis task
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a href="https://www.ncbi.nlm.nih.gov/research/" target="_blank">
+                        <div class="wcu-card p-3 mb-3">
+                            <i class="fa-solid fa-microscope wcu-card-image" style="color: #a21010;"></i>
+                            <h1 class="wcu-card-title mt-3">Research</h1>
+                            <p class="wcu-card-description">
+                                Explore BDMVS research and collaborative projects
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="explore-menu-section pt-5 pb-5" id="exploreMenuSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="menu-section-heading">Popular Resources</h1>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="shadow menu-item-card p-3 mb-3 pt-5">
+                        <img src="{% static 'Images/Pubmed Img.png' %}" class="menu-item-image w-100" />
+                        <h1 class="menu-card-title">PubMed</h1>
+                        <p><a href="https://pubmed.ncbi.nlm.nih.gov/" class="menu-item-link">
+                                View All
+                                <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right-short" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                                </svg>
+                            </a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="shadow menu-item-card-2 p-3 mb-3">
+                        <img src="{% static 'Images/Genome Img.jpg' %}" class="menu-item-image-2" />
+                        <h1 class="menu-card-title">Genome</h1>
+                        <p><a href="" class="menu-item-link">
+                                View All
+                                <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                                </svg>
+                            </a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="menu-item-card-3 shadow p-3 mb-3">
+                        <img src="{% static 'Images/Blast Img.jpg' %}" class="menu-item-image-3 w-100 pb-3 pt-5" />
+                        <h1 class="menu-card-title">BLAST</h1>
+                        <p><a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi" class="menu-item-link">
+                                View All
+                                <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                                </svg>
+                            </a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="menu-item-card-4 shadow p-3 mb-3 pt-5">
+                        <img src="{% static 'Images/Pubchem Img.png' %}" class="menu-item-image-2 pt-5 pb-5" />
+                        <h1 class="menu-card-title">PubChem</h1>
+                        <p><a href="https://pubchem.ncbi.nlm.nih.gov/" class="menu-item-link">
+                                View All
+                                <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                                </svg>
+                            </a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="menu-item-card-5 shadow p-3 mb-3">
+                        <img src="{% static 'Images/Pubmed Central Img.png' %}" class="menu-item-image-5 w-100" />
+                        <h1 class="menu-card-title">PubMed Central</h1>
+                        <p><a href="https://www.ncbi.nlm.nih.gov/pmc/" class="menu-item-link-2">
+                                View All
+                                <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                                </svg>
+                            </a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="menu-item-card-3 shadow p-3 mb-3">
+                        <img src="{% static 'Images/Proteins Img.png' %}" class="menu-item-image-5 w-100" />
+                        <h1 class="menu-card-title">Proteins</h1>
+                        <p><a href="" class="menu-item-link">
+                                View All
+                                <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                                </svg>
+                            </a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="follow-us-section pt-5 pb-5" id="followUsSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="follow-us-section-heading">Follow Us</h1>
+                </div>
+                <div class="col-12">
+                    <div class="d-flex flex-row justify-content-center">
+                        <a href="https://twitter.com/ncbi">
+                            <div class="follow-us-icon-container">
+                                <i class="fab fa-twitter icon-3"></i>
+                            </div>
+                        </a>
+                        <a href="https://www.facebook.com/ncbi.nlm/" target="_blank">
+                            <div class="follow-us-icon-container">
+                                <i class="fab fa-facebook icon-3"></i>
+                            </div>
+                        </a>
+                        <a href="https://www.linkedin.com/company/ncbinlm" target="_blank">
+                            <div class="follow-us-icon-container-2">
+                                <i class="fa-brands fa-linkedin icon-3" style="color: #907514;"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-section pt-5 pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img src="https://res.cloudinary.com/drzzqkakp/image/upload/v1712844768/sxcvabg2q7hsej8tl7qe.png" class="food-munch-logo-2" />
+                    <h1 class="footer-section-mail-id">National Centre for Biotechnology</h1>
+                    <p class="footer-section-address">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                        </svg> <a href="https://www.google.co.in/maps/place/National+Library+of+Medicine/@38.9959549,-77.1014126,17z/data=!4m10!1m2!2m1!1sBethesda+location+in+ncbi!3m6!1s0x89b7c95dfe7f5841:0x12ac4f25fcd8aad0!8m2!3d38.9959508!4d-77.0988323!15sChlCZXRoZXNkYSBsb2NhdGlvbiBpbiBuY2JpWhsiGWJldGhlc2RhIGxvY2F0aW9uIGluIG5jYmmSARBuYXRpb25hbF9saWJyYXJ5mgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVVEyYlRreVMwMUJFQUXgAQA!16zL20vMDI0cjJ6?entry=ttu" target="_blank">Bethesda, Maryland.</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

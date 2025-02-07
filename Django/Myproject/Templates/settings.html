@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="{% static 'Bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="{% static 'Jquery/jquery.min.js' %}"></script>
+
+    <!-- Include Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+
+    <!-- Include Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+</head>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .navbar .nav-link {
+        font-weight: 500;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+    }
+
+    .settings-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .profile-section {
+        position: relative;
+    }
+
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #007bff;
+    }
+
+    .edit-btn {
+        display: inline-block;
+        margin-top: 10px;
+        background-color: #6c757d;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .edit-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .input-group .edit-icon {
+        cursor: pointer;
+        background-color: #f8f9fa;
+    }
+
+    .input-group .edit-icon i {
+        color: #007bff;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+        color: white;
+        margin-bottom: 15px;
+    }
+
+    .profile-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #007bff;
+        color: white;
+        font-size: 36px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        border: 3px solid #007bff;
+        margin: auto;
+    }
+
+</style>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">BDMVS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/about/' %}active{% endif %}">
+                        <a class="nav-link" href="/about/">About</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <div class="bg-dark">
+                        <nav>
+                            <ul class="navbar-nav">
+                                <li class="nav-item {% if request.path == '/settings/' %}active{% endif %}">
+                                    <a class="nav-link active" href="{% url 'settings' %}">Settings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    {% else %}
+                        <li class="nav-item {% if request.path == '/login/' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Settings Form -->
+    <div class="container">
+        <div class="settings-card">
+            <h2 class="text-center">Account Settings</h2>
+    
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+    
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Profile Picture with Edit Option -->
+                <div class="profile-section text-center">
+                    {% if user.profile.profile_picture %}
+                        <img id="profileImage" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+                    {% else %}
+                        <div id="profileImagePlaceholder" class="profile-placeholder">
+                            {{ user.username|first|upper }} <!-- Display First Letter of Username -->
+                        </div>
+                    {% endif %}
+                    <br>
+                    <label for="profile_picture" class="edit-btn">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </label>
+                    <input type="file" id="profile_picture" name="profile_picture" class="d-none">
+                </div>                
+    
+                <!-- Modal for Image Cropping -->
+                <div class="modal" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cropModalLabel">Crop Your Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img id="image" src="" alt="Image to Crop">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" id="cropBtn" class="btn btn-primary">Crop & Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Editable Username -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                        <span class="input-group-text edit-icon">
+                            <i class="fas fa-pencil-alt"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+            </form>
+        </div>
+    </div>    
+    
+    <script>
+        var cropper;
+
+        // Trigger file input when clicking the "Edit" button
+        document.querySelector('.edit-btn').addEventListener('click', function() {
+            document.getElementById('profile_picture').click();
+        });
+
+        // Show crop modal when an image is selected
+        document.getElementById('profile_picture').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var image = document.getElementById('image');
+                    image.src = e.target.result;
+
+                    $('#cropModal').modal('show');  // Show the cropping modal
+
+                    // Initialize Cropper.js
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 0.8,
+                        responsive: true,
+                        zoomable: true,
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Crop and Save Image
+        document.getElementById('cropBtn').addEventListener('click', function() {
+            var croppedCanvas = cropper.getCroppedCanvas();
+            if (croppedCanvas) {
+                var croppedImage = croppedCanvas.toDataURL('image/jpeg'); // Convert to base64
+
+                // Set the cropped image as profile picture preview
+                document.getElementById('profileImage').src = croppedImage;
+                $('#cropModal').modal('hide'); // Hide modal
+
+                // Pass cropped image to the form
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'cropped_image';
+                input.value = croppedImage;
+                document.querySelector('form').appendChild(input);
+            }
+        });
+        $(document).ready(function(){
+            $(".alert").hide(4000);
+        });
+    </script>  
+</body>
+</html>
