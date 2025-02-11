@@ -12,6 +12,12 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
+import base64
+import uuid
+from django.core.files.base import ContentFile
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import update_session_auth_hash
+from django.db import IntegrityError
 
 
 def Home(request):
@@ -124,38 +130,68 @@ def form_view(request):
 
 UserModel = get_user_model()  # This is an alternative to directly using `settings.AUTH_USER_MODEL`
 
+# def register(request):
+#     if request.method == "POST":
+#         username = request.POST['username']
+#         email = request.POST['email']
+#         phone_number = request.POST['phone_number']
+#         password1 = request.POST['password1']
+#         password2 = request.POST['password2']
+#         profile_picture = request.FILES.get('profile_picture')
+
+#         if password1 != password2:
+#             messages.error(request, "Passwords do not match!")
+#             return redirect('register')
+
+#         if UserModel.objects.filter(username=username).exists():
+#             messages.error(request, "Username already exists!")
+#             return redirect('register')
+
+#         user = UserModel.objects.create_user(username=username, email=email, password=password1)
+#         user.save()
+
+#         # Save profile image
+#         if profile_picture:
+#             profile = Profile.objects.create(user=user, phone_number=phone_number, profile_picture=profile_picture)
+#             profile.save()
+
+#         messages.success(request, "Registration successful! Please log in.")
+#         return redirect('login')
+
+#     return render(request, 'register.html')
+
 def register(request):
     if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        phone_number = request.POST['phone_number']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        profile_picture = request.FILES.get('profile_picture')
+        username = request.POST["username"]
+        email = request.POST["email"]
+        phone_number = request.POST["phone_number"]
+        password1 = request.POST["password1"]
+        password2 = request.POST["password2"]
 
         if password1 != password2:
-            messages.error(request, "Passwords do not match!")
-            return redirect('register')
+            messages.error(request, "Passwords do not match.")
+            return redirect("register")
 
-        if UserModel.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists!")
-            return redirect('register')
+        if CustomUser.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken.")
+            return redirect("register")
 
-        user = UserModel.objects.create_user(username=username, email=email, password=password1)
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered.")
+            return redirect("register")
+
+        user = CustomUser.objects.create(username=username, email=email, phone_number=phone_number)
+        user.password = make_password(password1)  # Hash password before saving
         user.save()
 
-        # Save profile image
-        if profile_picture:
-            profile = Profile.objects.create(user=user, phone_number=phone_number, profile_picture=profile_picture)
-            profile.save()
+        messages.success(request, "Account created successfully! Please log in.")
+        return redirect("login")
 
-        messages.success(request, "Registration successful! Please log in.")
-        return redirect('login')
+    return render(request, "register.html")
 
-    return render(request, 'register.html')
 
 def user_login(request):
-    image = None  # Initialize image to None
+    image = None
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -164,21 +200,25 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)
-            return redirect('search_category')  # Redirect to home page after successful login
+            if user.is_superuser:  # Only allow superusers to log in
+                login(request, user)
+                return redirect('search_category')  # Redirect to the home page
+            else:
+                messages.error(request, 'Access restricted to superusers only.')
+                return redirect('login')
+
         else:
             messages.error(request, 'Invalid username or password.')
-            return render(request, 'login.html')  # Re-render the login page with error message
+            return render(request, 'login.html')
+
     else:
-        if request.user.is_authenticated:  # Check if the user is already authenticated
+        if request.user.is_authenticated:
             try:
                 image = Profile.objects.get(user=request.user)
-                print(image)
             except Profile.DoesNotExist:
-                image = None  # Handle the case where the user doesn't have a profile image
-                print(image)
+                image = None  
 
-        return render(request, 'login.html', {'image': image})  # Pass the image to the template
+        return render(request, 'login.html', {'image': image}) # Pass the image to the template
     
 def logout_view(request):
     # Log the user out
@@ -186,30 +226,59 @@ def logout_view(request):
     # Redirect to the homepage or any other page
     return render(request, 'logout.html')  # or your desired URL
 
-User = get_user_model() 
+@login_required
+def profile(request):
+    user = request.user
 
-def settings(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
+    # Ensure the profile exists
+    profile, created = Profile.objects.get_or_create(user=user)
 
-        # Check if the username or email already exists
-        if User.objects.exclude(id=request.user.id).filter(username=username).exists():
-            messages.error(request, "Username is already taken.")
-            return redirect('settings')
+    if request.method == 'POST':
+        try:
+            # Handle profile picture upload
+            if 'profile_picture' in request.FILES:
+                profile.profile_picture = request.FILES['profile_picture']
+                profile.save()
 
-        if User.objects.exclude(id=request.user.id).filter(email=email).exists():
-            messages.error(request, "Email is already registered.")
-            return redirect('settings')
+            # Handle username update (Check for duplicates)
+            new_username = request.POST.get('username')
+            if new_username and new_username != user.username:
+                if CustomUser.objects.filter(username=new_username).exclude(id=user.id).exists():
+                    messages.error(request, "This username is already taken. Please choose another.")
+                    return redirect('profile')
+                user.username = new_username
 
-        # Save the changes
-        request.user.username = username
-        request.user.email = email
-        request.user.save()
-        messages.success(request, "Profile updated successfully!")
-        return redirect('settings')
+            # Handle email update (Check for duplicates)
+            new_email = request.POST.get('email')
+            if new_email and new_email != user.email:
+                if CustomUser.objects.filter(email=new_email).exclude(id=user.id).exists():
+                    messages.error(request, "This email is already in use. Please use another.")
+                    return redirect('profile')
+                user.email = new_email
 
-    return render(request, "settings.html")
+            # Handle password update
+            new_password = request.POST.get('password')
+            if new_password:
+                user.set_password(new_password)  # Hash the new password before saving
+                user.save()
+
+                # Authenticate the user with the new password
+                updated_user = authenticate(username=user.username, password=new_password)
+                if updated_user:
+                    login(request, updated_user)  # Log in the user with the new password
+                    messages.success(request, "Profile updated successfully! Please log in again.")
+                    return redirect('login')
+
+            user.save()
+            messages.success(request, "Profile updated successfully!")
+
+            return redirect('profile')
+
+        except IntegrityError:
+            messages.error(request, "An error occurred while saving your profile. Please try again.")
+            return redirect('profile')
+
+    return render(request, 'profile.html')
 
 def update_protein(request, id):
     data = Albumin.objects.get(id=id)

@@ -205,7 +205,9 @@
                             {% endif %}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown" style="margin-top: 10px; margin-right: 20px;">
-                            <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
@@ -241,7 +243,9 @@
                         <button class="search-button">Search</button>
                     </div>
                     <div class="d-flex flex-row justify-content-end mr-5">
-                        <a href="{% url 'new_file' %}"><button class="add-button"> Add </button></a>
+                        {% if user.username == "admin" %}
+                            <a href="{% url 'new_file' %}"><button class="add-button"> Add </button></a>
+                        {% endif %}
                     </div>
                     <div class="col-12">
                         {% if data %}
@@ -257,18 +261,22 @@
                                     {% elif category == 'pubchem' %}<th>Pubchem Compound Name</th>
                                     {% elif category == 'blast' %}<th>Blast Name</th>
                                     {% endif %}
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    {% if user.username == "admin" %}
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for item in data %}
                                 <tr>
-                                    <td>{{ forloop.counter }}</td>
+                                    <td style="color:black;">{{ forloop.counter }}</td>
                                     <td><a href="{% url 'Databases_detail' item.id %}">{{ item.title }}</a></td>
-                                    <td><button class="btn btn-primary"><a href="{% url 'update_protein' item.id %}" class="text-white">Edit</a></button></td>
-                                    <td><button class="btn btn-danger"><a href="{% url 'delete_protein' item.id %}" class="text-white">Delete</a></button></td>
-                                </tr>
+                                    {% if user.username == "admin" %}
+                                        <td><button class="btn btn-primary"><a href="{% url 'update_protein' item.id %}" class="text-white">Edit</a></button></td>
+                                        <td><button class="btn btn-danger"><a href="{% url 'delete_protein' item.id %}" class="text-white">Delete</a></button></td>
+                                    {% endif %}
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>

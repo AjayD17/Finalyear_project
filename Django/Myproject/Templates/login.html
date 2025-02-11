@@ -122,7 +122,7 @@
             <div class="profile-info">
                 <p>Welcome, {{ request.user.username }}!</p>
 
-                {% if image.profile_picture %}
+                {% if image and image.profile_picture %}
                     <img src="{{ image.profile_picture.url }}" alt="Profile Picture" width="50" height="50">
                 {% else %}
                     <p>No profile picture available</p>
